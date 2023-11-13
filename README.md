@@ -2,7 +2,6 @@
 
 # Technologies
 
-# Installation using docker
 Java
 Quarkus
 QUTE
@@ -11,6 +10,8 @@ Postgres
 OIDC
 Keycloak
 
+
+# Installation using docker
 
 - postgres
 docker run -d -p 5432:5432 --network=NBP-APP -e POSTGRES_PASSWORD="admin" postgres
