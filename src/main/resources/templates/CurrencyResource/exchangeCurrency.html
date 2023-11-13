@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/html">
+<head>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+
+    <script type="text/javascript">
+        document.addEventListener("DOMContentLoaded", function () {
+        const sendButton = document.getElementById("sendButton");
+        const updateButton = document.getElementById("updateButton");
+
+        const amountInput = document.getElementById("amount");
+        const myCurrencyInput = document.getElementById("myCurrency");
+        const targetCurrencyInput = document.getElementById("targetCurrency");
+
+        const responseDiv = document.getElementById("response");
+
+        sendButton.addEventListener("click", function () {
+
+            const TOKEN = localStorage.getItem('authToken');
+
+            console.log("siema");
+            const amount = amountInput.value;
+            const myCurrency = myCurrencyInput.value;
+            const targetCurrency = targetCurrencyInput.value;
+
+            const data = {
+                "amount": amount,
+                "myCurrency": myCurrency,
+                "targetCurrency": targetCurrency
+            };
+
+            // Wysłanie żądania POST za pomocą AJAX
+            fetch("/currency/currencyExchangeValue", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + TOKEN
+                },
+                body: JSON.stringify(data)
+            })
+                .then(response => {
+
+                    if (response.status === 401) {
+                        throw new Error("Nie masz dostępu do tej opcji!");
+                    }
+
+                    if (response.status === 403) {
+                        throw new Error("Nie masz wystarczających uprawnień do tej opcji!");
+                    }
+
+                    return response.json();
+                })
+                .then(data => {
+                    responseDiv.innerHTML = "Kurs waluty źródłowej względem docelowej: " + data;
+                })
+                .catch(error => {
+                    responseDiv.innerHTML = "Błąd: " + error.message;
+                });
+        });
+
+        updateButton.addEventListener("click", function () {
+
+            // to bedzie pobieranie z pamieci przegladarki
+            const TOKEN = localStorage.getItem('authToken');
+
+            // Wysłanie żądania POST za pomocą AJAX
+            fetch("/currency/getCurrencyInfo", {
+                method: "POST",
+                headers: {
+                    "Authorization": "Bearer " + TOKEN
+                }
+            })
+                .then(response => {
+
+                    if (response.status === 401) {
+                        throw new Error("Nie masz dostępu do tej opcji!");
+                    }
+
+                    if (response.status === 403) {
+                        throw new Error("Nie masz wystarczających uprawnień do tej opcji!");
+                    }
+
+                    return response.text()
+                })
+                .then(data => {
+                    responseDiv.innerHTML = data;
+                })
+                .catch(error => {
+                    responseDiv.innerHTML = error.message;
+                });
+        });
+        });
+
+    </script>
+
+<script>
+
+    document.addEventListener("DOMContentLoaded", function() {
+
+      if(localStorage.getItem("authToken")) {
+        document.getElementById("logoutItem").classList.remove("disabled");
+      }
+    });
+
+    function logout(event) {
+      localStorage.removeItem("authToken");
+      document.getElementById("logoutItem").classList.add("disabled");
+      event.preventDefault();
+    }
+
+</script>
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="/index">Navbar</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav">
+            <li class="nav-item active">
+              <a class="nav-link" href="/index">Home <span class="sr-only"></span></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/login">Logowanie</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/register">Rejestracja</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/exchangeCurrency">Kalkulator wymiany walut</a>
+            </li>
+            <li class="nav-item">
+                <a id="logoutItem" class="nav-link disabled" id="logoutItem" onclick="logout(event)">
+                  Wyloguj
+                </a>
+              </li>
+          </ul>
+        </div>
+      </nav>
+
+      <h1>Kalkulator walut</h1>
+
+      <div class="form-group">
+          <label for="amount">Ilość: </label>
+          <input class="form-control" type="text" id="amount" name="amount">
+      </div>
+
+      <div class="form-group">
+          <label for="myCurrency">Waluta źródłowa:</label>
+          <input class="form-control" type="text" id="myCurrency" name="myCurrency">
+      </div>
+
+      <div class="form-group">
+          <label for="targetCurrency">Waluta docelowa:</label>
+          <input class="form-control" type="text" id="targetCurrency" name="targetCurrency">
+      </div>
+
+      <div class="form-group">
+          <button class="btn btn-primary" id="updateButton">Aktualizuj</button>
+          <button class="btn btn-primary" id="sendButton">Oblicz</button>
+      </div>
+
+      <div id="response"></div>
+
+</body>
+</html>

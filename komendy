@@ -1,0 +1,77 @@
+./mvnw quarkus:dev - start aplikacji
+./mvnw test - uruchomienie testów
+==========budowanie aplikacji==============
+# Before building the container image run:
+#
+# ./mvnw package
+#
+# Then, build the image with:
+#
+# docker build -f src/main/docker/Dockerfile.jvm -t quarkus/code-with-quarkus-jvm .
+#
+# Then run the container using:
+#
+# docker run -i --rm -p 8080:8080 quarkus/code-with-quarkus-jvm
+
+docker network create keycloak-network
+
+====uruchomienie kontenera postgres
+docker run -d -p 5432:5432 -e POSTGRES_PASSWORD="admin" postgres
+username = postgres, password = admin
+
+====uruchomienie kontenera postgres w wspólnym networku
+docker run -d -p 5432:5432 --net keycloak-network -e POSTGRES_PASSWORD="admin" postgres
+username = postgres, password = admin
+
+=====uruchamianie kontenera keycloak
+docker run --name keycloak -d -p 8180:8080 -e KEYCLOAK_ADMIN=admin -e KEYCLOAK_ADMIN_PASSWORD=admin quay.io/keycloak/keycloak:latest start-dev
+link: http://localhost:8180/admin/master/console/
+
+=====uruchamianie kontenera keycloak w wspólnym networku
+docker run --name keycloak -d -p 8180:8080
+--net keycloak-network
+-e KEYCLOAK_ADMIN=admin
+-e KEYCLOAK_ADMIN_PASSWORD=admin
+-e KC_DB=postgres
+-e KC_DB_URL=jdbc:postgresql://localhost:5432/NBP_POSTGRES
+-e KC_DB_USERNAME=postgres
+-e KC_DB_PASSWORD=admin
+quay.io/keycloak/keycloak:latest start-dev
+
+link: http://localhost:8180/admin/master/console/
+
+====uruchomienie kontenera pgadmin
+5050:80
+docker run --name pgadmin -d -p 5050:80
+-e PGADMIN_DEFAULT_EMAIL="admin@admin.com"
+-e PGADMIN_DEFAULT_PASSWORD="admin"  dpage/pgadmin4
+
+
+
+
+http://localhost:8080/q/dev-v1
+-----------------------------------
+
+matiu@matiu-MS-7C91:~$ pass init DCBBBA1CB4843DD9F4C347C92DC93F05FB15A25C
+mkdir: created directory '/home/matiu/.password-store/'
+Password store initialized for DCBBBA1CB4843DD9F4C347C92DC93F05FB15A25C
+passphrase: Qwerty123$
+
+https://www.youtube.com/watch?v=x_XYnHmr1hI - openid i jsonwebtoken
+http://localhost:8080/q/dev-v1/ - quarkus dev ui
+https://quarkus.io/guides/security-openid-connect-dev-services - keycloack login bob lub alice
+https://www.youtube.com/watch?v=DBtnjSiwjAU&list=PLHXvj3cRjbzsVyj6Pxfu4uRE1PtWa2CIw&index=10
+
+matiu - password: test
+
+localhost:33653/realms/{realm-name}/protocol/openid-connect/token
+client_id
+client_secret
+grant_type
+username
+password
+
+localhost:33653/realms/{realm-name}/protocol/openid-connect/token/introspect
+token
+client_id
+client_secret

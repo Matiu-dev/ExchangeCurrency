@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+
+
+    <script type="text/javascript">
+      document.addEventListener("DOMContentLoaded", function () {
+
+        console.log("elo");
+        const loginButton = document.getElementById("loginButton");
+
+        const usernameInput = document.getElementById("username");
+        const passwordInput = document.getElementById("password");
+
+        const responseDiv = document.getElementById("response");
+
+        loginButton.addEventListener("click", function () {
+
+          const username = usernameInput.value;
+          const password = passwordInput.value;
+
+          const data = {
+              "client_id": "",
+              "client_secret": "",
+              "grant_type": "",
+              "username": username,
+              "password": password
+          };
+
+          // Wysłanie żądania POST za pomocą AJAX
+          fetch("/login", {
+              method: "POST",
+              headers: {
+                  "Content-Type": "application/json"
+              },
+              body: JSON.stringify(data)
+          })
+              .then(response => response.text())
+              .then(data => {
+                  responseDiv.innerHTML = "token ss:" + data;
+                  localStorage.setItem('authToken', data);
+              })
+              .catch(error => {
+                  responseDiv.innerHTML = "Błąd: " + error.message;
+              });
+        });
+
+      });
+
+    </script>
+
+<script>
+
+  document.addEventListener("DOMContentLoaded", function() {
+
+    if(localStorage.getItem("authToken")) {
+      document.getElementById("logoutItem").classList.remove("disabled");
+    }
+  });
+
+  function logout(event) {
+    localStorage.removeItem("authToken");
+    document.getElementById("logoutItem").classList.add("disabled");
+    event.preventDefault();
+  }
+
+</script>
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="/index">Navbar</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav">
+            <li class="nav-item active">
+              <a class="nav-link" href="/index">Home <span class="sr-only"></span></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/login">Logowanie</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/register">Rejestracja</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/exchangeCurrency">Kalkulator wymiany walut</a>
+            </li>
+            <li class="nav-item">
+              <a id="logoutItem" class="nav-link disabled" id="logoutItem" onclick="logout(event)">
+                Wyloguj
+              </a>
+            </li>
+          </ul>
+        </div>
+      </nav>
+
+    <h1>Logowanie</h1>
+
+    <!-- Email input -->
+  <div class="form-outline mb-4">
+    <label class="form-label" for="username">Login:</label>
+    <input  id="username" name="username" class="form-control" />
+  </div>
+
+  <!-- Password input -->
+  <div class="form-outline mb-4">
+    <label class="form-label" for="password">Hasło</label>
+    <input type="password" id="password" class="form-control" />
+  </div>
+
+  <!-- Submit button -->
+  <button type="button" class="btn btn-primary btn-block mb-4" id="loginButton">Sign in</button>
+
+  <div id="response"></div>
+</body>
+</html>

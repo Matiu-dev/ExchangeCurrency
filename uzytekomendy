@@ -1,0 +1,59 @@
+docker run -d -p 5432:5432 --network=NBP-APP -e POSTGRES_PASSWORD="admin" postgres
+===================================================================================
+docker run --name keycloak -d -p 8180:8080 --network=NBP-APP
+-e KEYCLOAK_ADMIN=admin
+-e KEYCLOAK_ADMIN_PASSWORD=admin quay.io/keycloak/keycloak:latest start-dev
+
+ustawienia keycloka jak w tym filmiku: https://www.youtube.com/watch?v=g7mhnZfbbOk
+===================================================================================
+docker run --name pgadmin -d -p 5050:80 --network=NBP-APP
+-e PGADMIN_DEFAULT_EMAIL="admin@admin.com"
+-e PGADMIN_DEFAULT_PASSWORD="admin"  dpage/pgadmin4
+===================================================================================
+./mvnw package
+docker build -f src/main/docker/Dockerfile.jvm -t quarkus/code-with-quarkus-jvm .
+docker run --name NBP-APP -i -p 8080:8080 --network=NBP-APP quarkus/code-with-quarkus-jvm
+===================================================================================
+
+
+Aby sworzyć użytkownika:
+trzeba nadac role dla klienta: manage-users
+http://localhost:8180/admin/realms/{realm-name}/users - POST
+body:
+{
+    "firstName":"Sergey",
+    "lastName":"Kargopolov",
+    "email":"test@test.com",
+    "enabled": true,
+    "username":"app-user",
+    "credentials": [{
+        "type": "password",
+        "value": "mypass#!23",
+        "temporary": false
+        }
+    ],
+    "requiredActions": [
+        "CONFIGURE_TOTP",
+        "VERIFY_EMAIL"
+    ],
+    "groups": [],
+    "attributes": {
+        "locale": [
+            "en"
+        ]
+    }
+}
+i auth token
+========pobranie tokenu
+localhost:8180/realms/NBP-dev/protocol/openid-connect/token - POST
+client_id:
+client_secret:
+grant_type:
+username:
+password:
+
+Komenda ktora zwroci ip addres dla powyzszego polecenia z dodaniem --network=NBP-APP
+#docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' cc8e1fdb9771
+#host.docker.internal pobranie adresu ip z zakresie tego samego networku
+
+//uruchamianie aplikacji ./mvnw quarkus:dev
