@@ -3,7 +3,7 @@
 Main features:
 - user login 
 - user registration
-- upadate data in database by user who have admin role
+- download data from NBP api and upadate a database by user who have admin role
 - calculating exchange rates between currencies by other roles
 
 # Technologies
