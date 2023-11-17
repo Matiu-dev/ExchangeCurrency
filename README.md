@@ -8,13 +8,13 @@ Main features:
 
 # Technologies
 
-Java
-Quarkus
-QUTE
-Hibernate
-Postgres
-OIDC
-Keycloak
+- Java
+- Quarkus
+- QUTE
+- Hibernate
+- Postgres
+- OpenID Connect & JWT
+- Keycloak
 
 
 # Installation using docker
