@@ -38,5 +38,7 @@ docker run --name pgadmin -d -p 5050:80 --network=NBP-APP
 - quarkus app
 
 ./mvnw package
+
 docker build -f src/main/docker/Dockerfile.jvm -t quarkus/code-with-quarkus-jvm .
+
 docker run --name NBP-APP -i -p 8080:8080 --network=NBP-APP quarkus/code-with-quarkus-jvm
