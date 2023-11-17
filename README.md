@@ -1,7 +1,7 @@
 # ExchangeCurrency
 
 Main features:
-- user login 
+- user login
 - user registration
 - download data from NBP api and upadate a database by user who have admin role
 - calculating exchange rates between currencies by other roles
@@ -42,3 +42,17 @@ docker run --name pgadmin -d -p 5050:80 --network=NBP-APP
 docker build -f src/main/docker/Dockerfile.jvm -t quarkus/code-with-quarkus-jvm .
 
 docker run --name NBP-APP -i -p 8080:8080 --network=NBP-APP quarkus/code-with-quarkus-jvm
+
+# Application
+http://localhost:8080/login
+
+![image](https://github.com/Matiu-dev/ExchangeCurrency/assets/73337576/1fe0d9cc-2ad8-411c-bdc9-7aed12787569)
+
+http://localhost:8080/registration
+
+![image](https://github.com/Matiu-dev/ExchangeCurrency/assets/73337576/e9333810-88f8-4b8e-856e-8bd9ca3bc9c2)
+
+http://localhost:8080/exchangeCurrency
+
+![image](https://github.com/Matiu-dev/ExchangeCurrency/assets/73337576/88dd6b97-8ff2-4dcb-a357-9a9caf9ddbcc)
+
