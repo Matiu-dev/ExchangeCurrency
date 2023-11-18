@@ -10,7 +10,7 @@ Main features:
 
 - Java
 - Quarkus
-- QUTE
+- Qute
 - Hibernate
 - Postgres
 - OpenID Connect & JWT
