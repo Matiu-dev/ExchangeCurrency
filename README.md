@@ -35,7 +35,8 @@ docker run --name keycloak -d -p 8180:8080 --network=NBP-APP
 -e KEYCLOAK_ADMIN_PASSWORD=admin quay.io/keycloak/keycloak:latest start-dev
 
 Go to http://localhost:8180/ and click on administration Console.
-Create client
+
+Create client steps:
 
 ![image](https://github.com/Matiu-dev/ExchangeCurrency/assets/73337576/bcee2a64-4160-4743-9fc5-b9c148a792de)
 
