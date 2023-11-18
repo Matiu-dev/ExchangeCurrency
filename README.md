@@ -15,6 +15,7 @@ Main features:
 - Postgres
 - OpenID Connect & JWT
 - Keycloak
+- HTML/CSS/JavaScript/Bootstrap
 
 
 # Installation using docker
