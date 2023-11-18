@@ -109,6 +109,12 @@
       <version>2.15.2</version> <!-- Use the latest version available -->
     </dependency>
 
+    <dependency>
+      <groupId>javax.inject</groupId>
+      <artifactId>javax.inject</artifactId>
+      <version>1</version> <!-- lub najnowsza dostępna wersja -->
+    </dependency>
+
   </dependencies>
 
 
