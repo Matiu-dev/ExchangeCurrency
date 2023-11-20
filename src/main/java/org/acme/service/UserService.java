@@ -36,9 +36,9 @@ public class UserService {
         AppUserInput appUserInput = new Gson().fromJson(json, AppUserInput.class);
 
         JsonObject jsonData = new JsonObject();
-        jsonData.addProperty("firstName", "mat");
-        jsonData.addProperty("lastName", "wro");
-        jsonData.addProperty("email", "mat@wro.com");
+        jsonData.addProperty("firstName", appUserInput.getFirstName());
+        jsonData.addProperty("lastName", appUserInput.getLastName());
+        jsonData.addProperty("email", appUserInput.getEmail());
         jsonData.addProperty("enabled", true);
         jsonData.addProperty("username", appUserInput.getUsername());
 

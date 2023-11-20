@@ -1,6 +1,7 @@
 package org.acme.service;
 
 import io.quarkus.hibernate.orm.panache.PanacheQuery;
+import io.smallrye.common.annotation.Blocking;
 import jakarta.transaction.Transactional;
 import org.acme.Entity.Currency;
 import org.acme.model.CurrencyCodeEnum;
@@ -10,6 +11,7 @@ import org.acme.repository.CurrencyRepository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class CurrencyService {
 
@@ -40,5 +42,11 @@ public class CurrencyService {
 
     public double getCurrencyByCode(String code) {
         return currencyRepository.findByCode(code).getExchangeRate();
+    }
+
+    public List<String> getAllCurrencyCodes() {
+        return currencyRepository.findAll().stream().
+                map(c -> c.getCode().toUpperCase()).collect(Collectors.toList());
+
     }
 }

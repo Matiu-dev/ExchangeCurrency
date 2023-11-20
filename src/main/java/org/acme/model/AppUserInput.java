@@ -2,35 +2,14 @@ package org.acme.model;
 
 public class AppUserInput {
 
-    private String client_id;
-    private String client_secret;
-    private String grant_type;
+//    private String client_id;
+//    private String client_secret;
+//    private String grant_type;
     private String username;
     private String password;
-
-    public String getClient_id() {
-        return client_id;
-    }
-
-    public void setClient_id(String client_id) {
-        this.client_id = client_id;
-    }
-
-    public String getClient_secret() {
-        return client_secret;
-    }
-
-    public void setClient_secret(String client_secret) {
-        this.client_secret = client_secret;
-    }
-
-    public String getGrant_type() {
-        return grant_type;
-    }
-
-    public void setGrant_type(String grant_type) {
-        this.grant_type = grant_type;
-    }
+    private String firstName;
+    private String lastName;
+    private String email;
 
     public String getUsername() {
         return username;
@@ -48,14 +27,37 @@ public class AppUserInput {
         this.password = password;
     }
 
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
     @Override
     public String toString() {
         return "AppUserInput{" +
-                "client_id='" + client_id + '\'' +
-                ", client_secret='" + client_secret + '\'' +
-                ", grant_type='" + grant_type + '\'' +
-                ", username='" + username + '\'' +
+                "username='" + username + '\'' +
                 ", password='" + password + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", email='" + email + '\'' +
                 '}';
     }
 }

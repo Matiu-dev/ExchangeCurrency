@@ -1,8 +1,13 @@
 package org.acme.Entity;
 
+import io.quarkus.hibernate.orm.panache.PanacheEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
 
 @Entity
 public class Currency {
