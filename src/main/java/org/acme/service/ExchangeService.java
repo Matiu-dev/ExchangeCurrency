@@ -1,11 +1,6 @@
 package org.acme.service;
 
-import com.google.gson.Gson;
-import org.acme.Entity.Currency;
-import org.acme.Exception.MoneyExchangeException;
-import org.acme.model.ExchangeRatesTable;
 import org.acme.model.InputData;
-import org.acme.model.Rate;
 
 import java.math.BigDecimal;
 import java.math.MathContext;

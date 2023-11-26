@@ -9,11 +9,17 @@ import jakarta.ws.rs.Path;
 
 import java.util.List;
 
-@Path("/api/exchangerates/tables")
+@Path("/api/exchangerates")
 @RegisterRestClient(baseUri = "http://api.nbp.pl")
 public interface NBPService {
 
     @GET
-    @Path("/{table}")
+    @Path("/tables/{table}")
     List<ExchangeRatesTable> getExchangeRatesTable(@PathParam("table") String table);
+
+    @GET
+    @Path("/rates/{table}/{code}")
+    ExchangeRateForCurrency getExchangeRateForCurrency(@PathParam("table") String table,
+                                                       @PathParam("code") String code);
+
 }

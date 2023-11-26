@@ -1,15 +1,14 @@
 package org.acme.service;
 
-import io.quarkus.hibernate.orm.panache.PanacheQuery;
-import io.smallrye.common.annotation.Blocking;
 import jakarta.transaction.Transactional;
+import jakarta.ws.rs.InternalServerErrorException;
+import jakarta.ws.rs.NotFoundException;
+import org.acme.API.ExchangeRateForCurrency;
 import org.acme.Entity.Currency;
-import org.acme.model.CurrencyCodeEnum;
 import org.acme.model.ExchangeRatesTable;
 import org.acme.model.Rate;
 import org.acme.repository.CurrencyRepository;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -40,13 +39,34 @@ public class CurrencyService {
         }
     }
 
-    public double getCurrencyByCode(String code) {
-        return currencyRepository.findByCode(code).getExchangeRate();
+    @Transactional
+    public void deleteCurrency(String code) {
+        Currency currency = currencyRepository.findByCode(code);
+        if(currency == null) {
+            throw new NotFoundException();//przetestowac bez tego
+        }
+
+        currencyRepository.delete(currency);
     }
 
-    public List<String> getAllCurrencyCodes() {
-        return currencyRepository.findAll().stream().
-                map(c -> c.getCode().toUpperCase()).collect(Collectors.toList());
+    @Transactional
+    public void updateCurrency(ExchangeRateForCurrency exchangeRateForCurrency) {
+        Currency currency = new Currency();
+        currency.setCode(exchangeRateForCurrency.getCode());
+        currency.setNameOfCurrency(exchangeRateForCurrency.getCurrency());
+        currency.setExchangeRate(exchangeRateForCurrency.getRates().get(0).getMid());
+        currencyRepository.update("exchangeRate = ?1 where code = ?2",
+                currency.getExchangeRate(),
+                currency.getCode());
+    }
 
+    public double getCurrencyByCode(String code) {
+        Currency currency = currencyRepository.findByCode(code);
+
+        if (currency != null) {
+            return currency.getExchangeRate();
+        } else {
+            throw new InternalServerErrorException("Nie znaleziono waluty dla kodu: " + code);
+        }
     }
 }

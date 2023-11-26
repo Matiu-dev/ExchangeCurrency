@@ -1,6 +1,6 @@
 package org.acme.model;
 
-public class AppUserInput {
+public class UserRegister {
 
 //    private String client_id;
 //    private String client_secret;

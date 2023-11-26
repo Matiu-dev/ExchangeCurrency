@@ -4,7 +4,8 @@ import com.google.gson.Gson;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import org.acme.API.KeyCloakService;
-import org.acme.model.AppUserInput;
+import org.acme.model.UserLogin;
+import org.acme.model.UserRegister;
 import org.acme.service.UserService;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 
@@ -20,8 +21,8 @@ public class UserController {
     @Produces(MediaType.TEXT_PLAIN)
     public String login(String json) {
 
-        AppUserInput appUserInput = new Gson().fromJson(json, AppUserInput.class);
-        String token = new UserService().getUserToken(appUserInput.getUsername(), appUserInput.getPassword(), keyCloakService);
+        UserLogin userLogin = new Gson().fromJson(json, UserLogin.class);
+        String token = new UserService().getUserToken(userLogin.getUsername(), userLogin.getPassword(), keyCloakService);
 
         return token;
     }

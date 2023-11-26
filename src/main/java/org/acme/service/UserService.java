@@ -8,9 +8,7 @@ import com.google.gson.JsonObject;
 import jakarta.ws.rs.core.MultivaluedHashMap;
 import jakarta.ws.rs.core.MultivaluedMap;
 import org.acme.API.KeyCloakService;
-import org.acme.model.AppUserInput;
-import org.eclipse.microprofile.config.inject.ConfigProperties;
-import org.eclipse.microprofile.config.inject.ConfigProperty;
+import org.acme.model.UserRegister;
 
 public class UserService {
 
@@ -19,11 +17,11 @@ public class UserService {
     private final static String CLIENT_SECRET = "Hl6dgPBMVds5nFVFsuxfzxAYgbbFmaBK";
 
     public String getUserToken(String username, String password, KeyCloakService keyCloakService) {
-//        AppUserInput appUserInput = new Gson().fromJson(json, AppUserInput.class);
+
 
         MultivaluedMap<String, String> form = new MultivaluedHashMap<>();
         form.add("client_id", CLIENT_ID);
-        form.add("client_secret", CLIENT_SECRET);//nie znalazłem endpointa do tego
+        form.add("client_secret", CLIENT_SECRET);
         form.add("grant_type", GRANT_TYPE);
         form.add("username", username);
         form.add("password", password);
@@ -33,19 +31,19 @@ public class UserService {
 
     public String registerUser(String json, KeyCloakService keyCloakService) {
 
-        AppUserInput appUserInput = new Gson().fromJson(json, AppUserInput.class);
+        UserRegister userRegister = new Gson().fromJson(json, UserRegister.class);
 
         JsonObject jsonData = new JsonObject();
-        jsonData.addProperty("firstName", appUserInput.getFirstName());
-        jsonData.addProperty("lastName", appUserInput.getLastName());
-        jsonData.addProperty("email", appUserInput.getEmail());
+        jsonData.addProperty("firstName", userRegister.getFirstName());
+        jsonData.addProperty("lastName", userRegister.getLastName());
+        jsonData.addProperty("email", userRegister.getEmail());
         jsonData.addProperty("enabled", true);
-        jsonData.addProperty("username", appUserInput.getUsername());
+        jsonData.addProperty("username", userRegister.getUsername());
 
         JsonArray credentialsArray = new JsonArray();
         JsonObject credentialsObject = new JsonObject();
         credentialsObject.addProperty("type", "password");
-        credentialsObject.addProperty("value", appUserInput.getPassword());
+        credentialsObject.addProperty("value", userRegister.getPassword());
         credentialsObject.addProperty("temporary", false);
         credentialsArray.add(credentialsObject);
 
