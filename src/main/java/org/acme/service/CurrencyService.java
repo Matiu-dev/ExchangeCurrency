@@ -8,6 +8,7 @@ import org.acme.Entity.Currency;
 import org.acme.model.ExchangeRatesTable;
 import org.acme.model.Rate;
 import org.acme.repository.CurrencyRepository;
+import org.acme.repository.TableRepository;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -15,28 +16,10 @@ import java.util.stream.Collectors;
 public class CurrencyService {
 
     private CurrencyRepository currencyRepository;
+    private TableRepository tableRepository;
     public CurrencyService() {
+        tableRepository = new TableRepository();
         currencyRepository = new CurrencyRepository();
-    }
-
-    @Transactional
-    public void createCurrency(ExchangeRatesTable exchangeRatesTable) {
-
-        for (Rate rate : exchangeRatesTable.getRates()) {
-            Currency currency = currencyRepository.findByCode(rate.getCode());
-
-            if(currency == null) {
-                currencyRepository.persist(
-                    new Currency(rate.getCode(),
-                            rate.getCurrency(),
-                            rate.getMid()));
-            } else {
-                if(rate.getMid() != currency.getExchangeRate()) {
-                    currency.setExchangeRate(rate.getMid());
-                    currencyRepository.persist(currency);
-                }
-            }
-        }
     }
 
     @Transactional
@@ -55,12 +38,36 @@ public class CurrencyService {
         currency.setCode(exchangeRateForCurrency.getCode());
         currency.setNameOfCurrency(exchangeRateForCurrency.getCurrency());
         currency.setExchangeRate(exchangeRateForCurrency.getRates().get(0).getMid());
-        currencyRepository.update("exchangeRate = ?1 where code = ?2",
-                currency.getExchangeRate(),
-                currency.getCode());
+//        currency.setCurrencyTable();//find by currency table
+
+        Currency nCurrency = currencyRepository.findByCode(currency.getCode());
+
+
+
+        if (nCurrency != null) {
+            currencyRepository.update("exchangeRate = ?1 where code = ?2",
+                    currency.getExchangeRate(),
+                    currency.getCode());
+        } else {
+            currencyRepository.persist(currency);
+        }
     }
 
-    public double getCurrencyByCode(String code) {
+    public List<Currency> getAllCurrencies() {
+        return currencyRepository.listAll();
+    }
+
+    public Currency getCurrencyByCode(String code) {
+        Currency currency = currencyRepository.findByCode(code);
+
+        if (currency != null) {
+            return currency;
+        } else {
+            throw new InternalServerErrorException("Nie znaleziono waluty dla kodu: " + code);
+        }
+    }
+
+    public double getCurrencyValueByCode(String code) {
         Currency currency = currencyRepository.findByCode(code);
 
         if (currency != null) {

@@ -1,9 +1,7 @@
 package org.acme.Entity;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -16,6 +14,17 @@ public class Currency {
     private String nameOfCurrency;
     private double exchangeRate;
 
+    @ManyToOne
+    @JoinColumn
+    private CurrencyTable currencyTable;
+
+    public Currency(String code, String nameOfCurrency, double exchangeRate, CurrencyTable currencyTable) {
+        this.code = code;
+        this.nameOfCurrency = nameOfCurrency;
+        this.exchangeRate = exchangeRate;
+        this.currencyTable = currencyTable;
+    }
+
     public Currency() {
 
     }
@@ -24,6 +33,14 @@ public class Currency {
         this.code = code;
         this.nameOfCurrency = nameOfCurrency;
         this.exchangeRate = exchangeRate;
+    }
+
+    public CurrencyTable getCurrencyTable() {
+        return currencyTable;
+    }
+
+    public void setCurrencyTable(CurrencyTable currencyTable) {
+        this.currencyTable = currencyTable;
     }
 
     public String getCode() {

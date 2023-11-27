@@ -1,4 +1,4 @@
-package org.acme.service;
+package org.acme.validation;
 
 import jakarta.ws.rs.InternalServerErrorException;
 import org.acme.model.InputData;

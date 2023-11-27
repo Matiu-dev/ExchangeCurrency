@@ -1,4 +1,4 @@
-package org.acme.service;
+package org.acme.validation;
 
 import jakarta.json.*;
 import jakarta.ws.rs.ForbiddenException;

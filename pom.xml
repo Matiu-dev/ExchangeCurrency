@@ -56,6 +56,12 @@
       <version>2.10.1</version>
     </dependency>
     <dependency>
+      <groupId>com.fasterxml.jackson.dataformat</groupId>
+      <artifactId>jackson-dataformat-xml</artifactId>
+      <version>2.13.0</version> <!-- Wersja może być inna -->
+    </dependency>
+
+    <dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-rest-client-reactive</artifactId>
     </dependency>

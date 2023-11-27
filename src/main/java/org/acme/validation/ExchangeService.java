@@ -1,6 +1,8 @@
-package org.acme.service;
+package org.acme.validation;
 
 import org.acme.model.InputData;
+import org.acme.service.CurrencyService;
+import org.acme.validation.Validation;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
@@ -24,14 +26,14 @@ public class ExchangeService {
             myCurrencyValue = new BigDecimal("1");
         } else {
             myCurrencyValue = BigDecimal.valueOf(
-                    currencyService.getCurrencyByCode(inputData.getMyCurrency()));
+                    currencyService.getCurrencyValueByCode(inputData.getMyCurrency()));
         }
 
         if(inputData.getTargetCurrency().equals("PLN")) {
             targetCurrencyValue = new BigDecimal("1");
         } else {
             targetCurrencyValue = BigDecimal.valueOf(
-                    currencyService.getCurrencyByCode(inputData.getTargetCurrency()));
+                    currencyService.getCurrencyValueByCode(inputData.getTargetCurrency()));
         }
 
         return String.format("%.2f", new BigDecimal(inputData.getAmount())

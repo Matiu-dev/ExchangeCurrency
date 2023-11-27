@@ -9,14 +9,8 @@ import org.acme.Entity.Currency;
 @ApplicationScoped
 public class CurrencyRepository implements PanacheRepository<Currency> {
 
-    //metoda klasyczna
     public Currency findByCode(String code) {
         return find("code", code).firstResult();
     }
-
-    //metoda reaktywna
-//    public Uni<Currency> findByCode(String code) {
-//        return find("code", code).firstResult();
-//    }
 
 }

@@ -1,0 +1,40 @@
+/register
+
+{
+ "username": "matiu",
+ "password": "pass",
+ "firstName": "mat",
+ "lastName": "wro",
+ "email": "mat@wro.pl"
+}
+
+=========================================================================
+/login
+
+Stworzony użytkownik:
+{
+   "username": "matiu",
+   "password": "pass"
+}
+
+Dla admina:
+
+{
+   "username": "admin",
+   "password": "admin"
+}
+=========================================================================
+/currency/getCurrencyInfo
+
+podajemy token w Authorization -> Type: Bearer Token i wklejamy Token
+=========================================================================
+
+/currency/currencyExchangeValue
+
+{
+      "amount": 1,
+      "myCurrency": "USD",
+      "targetCurrency": "PLN"
+}
+
+podajemy token w Authorization -> Type: Bearer Token i wklejamy Token
