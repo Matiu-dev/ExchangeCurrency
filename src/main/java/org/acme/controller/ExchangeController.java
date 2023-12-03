@@ -105,11 +105,9 @@ public class ExchangeController {
     @Path("/deleteCurrency/{code}")
     @Transactional
     @RolesAllowed({"admin", "default-roles-master"})
-    public Response deleteCurrency(@PathParam("code") String code) {
+    public void deleteCurrency(@PathParam("code") String code) {
 
         new CurrencyService().deleteCurrency(code);
-
-        return Response.status(Response.Status.OK).build();
     }
 
     @PUT
@@ -120,6 +118,9 @@ public class ExchangeController {
 
         new CurrencyService().updateCurrency(service.getExchangeRateForCurrency(table, code));
 
-        return Response.status(Response.Status.OK).build();
+        JsonObject jsonData = new JsonObject();
+        jsonData.addProperty("message", "Dodano walute: " + code);
+
+        return Response.status(Response.Status.OK).entity(jsonData).build();
     }
 }

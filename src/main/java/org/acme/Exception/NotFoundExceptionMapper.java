@@ -9,7 +9,7 @@ import jakarta.ws.rs.ext.Provider;
 
 import java.util.Scanner;
 
-@Provider
+@Provider//404
 public class NotFoundExceptionMapper implements ExceptionMapper<NotFoundException> {
     @Override
     public Response toResponse(NotFoundException exception) {

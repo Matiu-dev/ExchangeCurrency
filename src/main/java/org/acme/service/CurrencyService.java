@@ -25,11 +25,12 @@ public class CurrencyService {
     @Transactional
     public void deleteCurrency(String code) {
         Currency currency = currencyRepository.findByCode(code);
-        if(currency == null) {
-            throw new NotFoundException();//przetestowac bez tego
+        if(currency != null) {
+            currencyRepository.delete(currency);
+        } else {
+            throw new NotFoundException("Nie znaleziono waluty dla kodu: " + code);
         }
 
-        currencyRepository.delete(currency);
     }
 
     @Transactional

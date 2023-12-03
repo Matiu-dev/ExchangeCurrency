@@ -6,7 +6,7 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.ext.ExceptionMapper;
 import jakarta.ws.rs.ext.Provider;
 
-@Provider
+@Provider//401
 public class NotAuthorizedExceptionMapper implements ExceptionMapper<CustomNotAuthorizedException> {
 
     @Override
