@@ -58,6 +58,10 @@ public class CurrencyService {
         return currencyRepository.listAll();
     }
 
+    public Currency getCurrency(String table, String value) {
+        return new Currency();
+    }
+
     public Currency getCurrencyByCode(String code) {
         Currency currency = currencyRepository.findByCode(code);
 

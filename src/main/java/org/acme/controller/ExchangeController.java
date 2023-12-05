@@ -1,6 +1,7 @@
 package org.acme.controller;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.oracle.svm.core.annotate.Delete;
 import jakarta.annotation.security.RolesAllowed;
@@ -9,14 +10,20 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.acme.API.NBPService;
+import org.acme.Entity.Currency;
+import org.acme.Entity.CurrencyTable;
 import org.acme.Exception.CustomNotAuthorizedException;
 import org.acme.model.InputData;
+import org.acme.repository.TableRepository;
 import org.acme.service.CurrencyService;
 import org.acme.service.TableService;
 import org.acme.validation.ExchangeService;
 import org.acme.validation.JWTDecoder;
 
 import org.eclipse.microprofile.rest.client.inject.RestClient;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Path("/currency")
@@ -37,11 +44,32 @@ public class ExchangeController {
 
     //CRUD ponizej
 
-    @GET
-    @Path("/getCurrency/{responseType}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getCurrency(@PathParam("responseType") String responseType) {
+    //pobieranie jednej wartosci np Tabela A,B,C / wartosc 1,2,3...
 
+    @GET
+    @Path("/getCurrency/table/{table}/value/{value}")
+    public Response getCurrency(@PathParam("table") String table, @PathParam("value") int value) {
+
+        try {
+            return Response.status(Response.Status.OK)
+                    .entity( new TableRepository().findByTableName(table).getCurrencies().stream().collect(Collectors.toList()).get(value))
+                    .build();
+        } catch (IndexOutOfBoundsException e) {
+            throw new InternalServerErrorException("Wartość poza indeksem.");
+        } catch (NullPointerException e) {
+            throw new InternalServerErrorException("Nie ma takiej tabeli");
+        }
+
+    }
+
+    //pobieranie wielu wartosci
+    @GET
+    @Path("/getCurrencies/{responseType}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAllCurrencies(@PathParam("responseType") String responseType) {
+
+        List<Currency> currencies = new CurrencyService().getAllCurrencies();
+//        System.out.println(new Gson().toJson(currencies));
 
         if(responseType.equals("JSON")) {
             return Response.status(Response.Status.OK)
@@ -110,7 +138,7 @@ public class ExchangeController {
         new CurrencyService().deleteCurrency(code);
     }
 
-    @PUT
+    @PUT//poprawic tego puta jeszcze
     @Path("/putCurrency/table/{table}/code/{code}")
     @RolesAllowed({"admin", "default-roles-master"})
     @Transactional
