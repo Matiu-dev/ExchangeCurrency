@@ -16,6 +16,7 @@ import org.acme.Entity.CurrencyTable;
 import org.acme.Exception.CustomNotAuthorizedException;
 import org.acme.model.CurrencyReponseXML;
 import org.acme.model.InputData;
+import org.acme.model.RequestResponse;
 import org.acme.repository.TableRepository;
 import org.acme.service.CurrencyService;
 import org.acme.service.TableService;
@@ -23,10 +24,6 @@ import org.acme.validation.ExchangeService;
 import org.acme.validation.JWTDecoder;
 
 import org.eclipse.microprofile.rest.client.inject.RestClient;
-
-import java.util.Comparator;
-import java.util.stream.Collectors;
-
 
 @Path("/currency")
 public class ExchangeController {
@@ -120,10 +117,9 @@ public class ExchangeController {
 
         new TableService().createTable(service.getExchangeRatesTable(table).get(0));
 
-        JsonObject jsonData = new JsonObject();
-        jsonData.addProperty("message", "Zaktualizowawno dane");
-
-        return Response.status(Response.Status.OK).entity(jsonData).build();
+        return Response.status(Response.Status.OK)
+                .entity(new RequestResponse("Zaktualizowawno dane"))
+                .build();
     }
 
     @POST
@@ -136,10 +132,9 @@ public class ExchangeController {
 
         new TableService().createTable(service.getExchangeRatesTable(table).get(0));
 
-        JsonObject jsonData = new JsonObject();
-        jsonData.addProperty("message", "Zaktualizowawno dane");
-
-        return Response.status(Response.Status.OK).entity(jsonData).build();
+        return Response.status(Response.Status.OK)
+                .entity(new RequestResponse("Zaktualizowawno dane"))
+                .build();
     }
 
     @Delete
@@ -154,14 +149,14 @@ public class ExchangeController {
     @PUT//poprawic tego puta jeszcze
     @Path("/putCurrency/table/{table}/code/{code}")
     @RolesAllowed({"admin", "default-roles-master"})
+    @Produces(MediaType.APPLICATION_JSON)
     @Transactional
     public Response putCurrency(@PathParam("table") String table, @PathParam("code") String code) {
 
         new CurrencyService().updateCurrency(service.getExchangeRateForCurrency(table, code));
 
-        JsonObject jsonData = new JsonObject();
-        jsonData.addProperty("message", "Dodano walute: " + code);
-
-        return Response.status(Response.Status.OK).entity(jsonData).build();
+        return Response.status(Response.Status.OK)
+                .entity(new RequestResponse("Dodano walute: " + code))
+                .build();
     }
 }

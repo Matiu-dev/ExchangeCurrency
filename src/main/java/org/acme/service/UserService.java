@@ -14,7 +14,7 @@ public class UserService {
 
     private final static String CLIENT_ID = "quarkus-be";
     private final static String GRANT_TYPE = "password";
-    private final static String CLIENT_SECRET = "eRgegAVKxI9NmbLas8m9KFWJLRoay0sX";
+    private final static String CLIENT_SECRET = "Hl6dgPBMVds5nFVFsuxfzxAYgbbFmaBK";
 
     public String getUserToken(String username, String password, KeyCloakService keyCloakService) {
 
