@@ -1,8 +1,6 @@
 package org.acme.repository;
 
 import io.quarkus.hibernate.orm.panache.PanacheRepository;
-import io.smallrye.mutiny.Multi;
-import io.smallrye.mutiny.Uni;
 import jakarta.enterprise.context.ApplicationScoped;
 import org.acme.Entity.Currency;
 

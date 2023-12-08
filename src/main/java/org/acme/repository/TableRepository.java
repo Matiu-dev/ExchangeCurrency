@@ -4,6 +4,8 @@ import io.quarkus.hibernate.orm.panache.PanacheRepository;
 import org.acme.Entity.Currency;
 import org.acme.Entity.CurrencyTable;
 
+import java.util.List;
+
 public class TableRepository implements PanacheRepository<CurrencyTable> {
 
     public CurrencyTable findByTableName(String tableName) {

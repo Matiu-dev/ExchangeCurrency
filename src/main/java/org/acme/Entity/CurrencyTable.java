@@ -1,9 +1,11 @@
 package org.acme.Entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.xml.bind.annotation.XmlTransient;
 
 import java.util.Set;
 
@@ -16,6 +18,7 @@ public class CurrencyTable {
     private String effectiveDate;
 
     @OneToMany(mappedBy = "currencyTable", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private Set<Currency> currencies;
 
     public String getTableName() {

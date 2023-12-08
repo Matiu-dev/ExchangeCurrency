@@ -1,13 +1,12 @@
 package org.acme.Entity;
 
-import io.quarkus.hibernate.orm.panache.PanacheEntity;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
-
-import java.util.List;
-import java.util.stream.Collectors;
-
+import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlTransient;
 
 @Entity
+@XmlRootElement
 public class Currency {
     @Id
     private String code;
@@ -16,6 +15,8 @@ public class Currency {
 
     @ManyToOne
     @JoinColumn
+    @JsonBackReference
+    @XmlTransient
     private CurrencyTable currencyTable;
 
     public Currency(String code, String nameOfCurrency, double exchangeRate, CurrencyTable currencyTable) {

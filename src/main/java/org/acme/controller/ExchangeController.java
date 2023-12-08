@@ -9,10 +9,12 @@ import jakarta.transaction.Transactional;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.ext.MessageBodyWriter;
 import org.acme.API.NBPService;
 import org.acme.Entity.Currency;
 import org.acme.Entity.CurrencyTable;
 import org.acme.Exception.CustomNotAuthorizedException;
+import org.acme.model.CurrencyReponseXML;
 import org.acme.model.InputData;
 import org.acme.repository.TableRepository;
 import org.acme.service.CurrencyService;
@@ -22,7 +24,7 @@ import org.acme.validation.JWTDecoder;
 
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 
-import java.util.List;
+import java.util.Comparator;
 import java.util.stream.Collectors;
 
 
@@ -47,45 +49,57 @@ public class ExchangeController {
     //pobieranie jednej wartosci np Tabela A,B,C / wartosc 1,2,3...
 
     @GET
-    @Path("/getCurrency/table/{table}/value/{value}")
-    public Response getCurrency(@PathParam("table") String table, @PathParam("value") int value) {
+    @Path("/getCurrency/type/{responseType}/table/{table}/value/{value}")
+    @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+    public Response getCurrency(@PathParam("responseType") String responseType,
+                                @PathParam("table") String table,
+                                @PathParam("value") int value) {
 
-        try {
-            return Response.status(Response.Status.OK)
-                    .entity( new TableRepository().findByTableName(table).getCurrencies().stream().collect(Collectors.toList()).get(value))
-                    .build();
-        } catch (IndexOutOfBoundsException e) {
-            throw new InternalServerErrorException("Wartość poza indeksem.");
-        } catch (NullPointerException e) {
-            throw new InternalServerErrorException("Nie ma takiej tabeli");
+
+        if(responseType.equals("JSON")) {
+            try {
+                return Response.status(Response.Status.OK)
+                        .entity(new TableService().findByTableAndValue(table, value))
+                        .header("Content-Type", "application/json")
+                        .build();
+            } catch (IndexOutOfBoundsException e) {
+                throw new InternalServerErrorException("Wartość poza indeksem.");
+            } catch (NullPointerException e) {
+                throw new InternalServerErrorException("Nie ma takiej tabeli");
+            }
         }
 
+        if(responseType.equals("XML")) {
+            try {
+                Currency currency = new TableService().findByTableAndValue(table, value);
+
+                return Response.status(Response.Status.OK)
+                        .entity(new CurrencyReponseXML(
+                                currency.getCode(),
+                                currency.getNameOfCurrency(),
+                                currency.getExchangeRate()))
+                        .header("Content-Type", "application/xml")
+                        .build();
+            } catch (IndexOutOfBoundsException e) {
+                throw new InternalServerErrorException("Wartość poza indeksem.");
+            } catch (NullPointerException e) {
+                throw new InternalServerErrorException("Nie ma takiej tabeli");
+            }
+        }
+
+        throw new InternalServerErrorException("Niewłaściwa nazwa formatu danych.");
     }
 
     //pobieranie wielu wartosci
     @GET
-    @Path("/getCurrencies/{responseType}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getAllCurrencies(@PathParam("responseType") String responseType) {
+    @Path("/getCurrencies/table/{table}")
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response getAllCurrencies(@PathParam("table") String table) {
 
-        List<Currency> currencies = new CurrencyService().getAllCurrencies();
-//        System.out.println(new Gson().toJson(currencies));
-
-        if(responseType.equals("JSON")) {
-            return Response.status(Response.Status.OK)
-                    .entity(new CurrencyService().getAllCurrencies())
-                    .header("Content-Type", "application/json")
-                    .build();
-        }
-
-        if(responseType.equals("XML")) {
-            return Response.status(Response.Status.OK)
-                    .entity(new CurrencyService().getAllCurrencies())
-                    .header("Content-Type", "application/xml")
-                    .build();
-        }
-
-        throw new InternalServerErrorException("Niewłaściwa nazwa formatu danych.");
+        return Response.status(Response.Status.OK)
+                .entity(new TableRepository().findByTableName(table))
+                .header("Content-Type", "application/json")
+                .build();
     }
 
     @POST
@@ -104,7 +118,6 @@ public class ExchangeController {
             throw new CustomNotAuthorizedException("", "Musisz się zalogować, aby skorzystać z tej opcji");
         }
 
-//        new CurrencyService().createCurrency(service.getExchangeRatesTable(table).get(0));
         new TableService().createTable(service.getExchangeRatesTable(table).get(0));
 
         JsonObject jsonData = new JsonObject();

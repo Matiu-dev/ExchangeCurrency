@@ -9,9 +9,11 @@ import org.acme.model.Rate;
 import org.acme.repository.CurrencyRepository;
 import org.acme.repository.TableRepository;
 
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class TableService {
 
@@ -64,23 +66,11 @@ public class TableService {
         }
     }
 
-//    @Transactional
-//    public void createCurrency(ExchangeRatesTable exchangeRatesTable) {
-//
-//        for (Rate rate : exchangeRatesTable.getRates()) {
-//            Currency currency = currencyRepository.findByCode(rate.getCode());
-//
-//            if(currency == null) {
-//                currencyRepository.persist(
-//                        new Currency(rate.getCode(),
-//                                rate.getCurrency(),
-//                                rate.getMid()));
-//            } else {
-//                if(rate.getMid() != currency.getExchangeRate()) {
-//                    currency.setExchangeRate(rate.getMid());
-//                    currencyRepository.persist(currency);
-//                }
-//            }
-//        }
-//    }
+    public Currency findByTableAndValue(String table, int value) {
+        return new TableRepository().findByTableName(table)
+                .getCurrencies()
+                .stream()
+                .sorted(Comparator.comparing(Currency::getCode))
+                .collect(Collectors.toList()).get(value);
+    }
 }

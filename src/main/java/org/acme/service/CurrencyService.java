@@ -5,13 +5,10 @@ import jakarta.ws.rs.InternalServerErrorException;
 import jakarta.ws.rs.NotFoundException;
 import org.acme.API.ExchangeRateForCurrency;
 import org.acme.Entity.Currency;
-import org.acme.model.ExchangeRatesTable;
-import org.acme.model.Rate;
 import org.acme.repository.CurrencyRepository;
 import org.acme.repository.TableRepository;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class CurrencyService {
 
