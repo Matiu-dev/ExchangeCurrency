@@ -46,45 +46,45 @@ public class ExchangeController {
     //pobieranie jednej wartosci np Tabela A,B,C / wartosc 1,2,3...
 
     @GET
-    @Path("/getCurrency/type/{responseType}/table/{table}/value/{value}")
+    @Path("/getCurrency/table/{table}/value/{value}")
     @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-    public Response getCurrency(@PathParam("responseType") String responseType,
-                                @PathParam("table") String table,
+    public Response getCurrency(@PathParam("table") String table,
                                 @PathParam("value") int value) {
 
+        Currency currency = new TableService().findByTableAndValue(table, value);
 
-        if(responseType.equals("JSON")) {
-            try {
-                return Response.status(Response.Status.OK)
-                        .entity(new TableService().findByTableAndValue(table, value))
-                        .header("Content-Type", "application/json")
-                        .build();
-            } catch (IndexOutOfBoundsException e) {
-                throw new InternalServerErrorException("Wartość poza indeksem.");
-            } catch (NullPointerException e) {
-                throw new InternalServerErrorException("Nie ma takiej tabeli");
-            }
-        }
 
-        if(responseType.equals("XML")) {
-            try {
-                Currency currency = new TableService().findByTableAndValue(table, value);
-
-                return Response.status(Response.Status.OK)
-                        .entity(new CurrencyReponseXML(
+        try {
+            return Response.status(Response.Status.OK)
+                    .entity(new CurrencyReponseXML(
                                 currency.getCode(),
                                 currency.getNameOfCurrency(),
                                 currency.getExchangeRate()))
-                        .header("Content-Type", "application/xml")
-                        .build();
-            } catch (IndexOutOfBoundsException e) {
-                throw new InternalServerErrorException("Wartość poza indeksem.");
-            } catch (NullPointerException e) {
-                throw new InternalServerErrorException("Nie ma takiej tabeli");
-            }
+                    .build();
+        } catch (IndexOutOfBoundsException e) {
+            throw new InternalServerErrorException("Wartość poza indeksem.");
+        } catch (NullPointerException e) {
+            throw new InternalServerErrorException("Nie ma takiej tabeli");
         }
 
-        throw new InternalServerErrorException("Niewłaściwa nazwa formatu danych.");
+//        try {
+//                Currency currency = new TableService().findByTableAndValue(table, value);
+//
+//                return Response.status(Response.Status.OK)
+//                        .entity(new CurrencyReponseXML(
+//                                currency.getCode(),
+//                                currency.getNameOfCurrency(),
+//                                currency.getExchangeRate()))
+//                        .header("Content-Type", "application/xml")
+//                        .build();
+//            } catch (IndexOutOfBoundsException e) {
+//                throw new InternalServerErrorException("Wartość poza indeksem.");
+//            } catch (NullPointerException e) {
+//                throw new InternalServerErrorException("Nie ma takiej tabeli");
+//            }
+
+
+//        throw new InternalServerErrorException("Niewłaściwa nazwa formatu danych.");
     }
 
     //pobieranie wielu wartosci
@@ -146,7 +146,7 @@ public class ExchangeController {
         new CurrencyService().deleteCurrency(code);
     }
 
-    @PUT//poprawic tego puta jeszcze
+    @PUT
     @Path("/putCurrency/table/{table}/code/{code}")
     @RolesAllowed({"admin", "default-roles-master"})
     @Produces(MediaType.APPLICATION_JSON)

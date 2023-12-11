@@ -14,10 +14,9 @@ public class UserService {
 
     private final static String CLIENT_ID = "quarkus-be";
     private final static String GRANT_TYPE = "password";
-    private final static String CLIENT_SECRET = "Hl6dgPBMVds5nFVFsuxfzxAYgbbFmaBK";
+    private final static String CLIENT_SECRET = "eRgegAVKxI9NmbLas8m9KFWJLRoay0sX";
 
     public String getUserToken(String username, String password, KeyCloakService keyCloakService) {
-
 
         MultivaluedMap<String, String> form = new MultivaluedHashMap<>();
         form.add("client_id", CLIENT_ID);
