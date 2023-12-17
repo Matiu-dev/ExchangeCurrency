@@ -90,12 +90,11 @@ public class ExchangeController {
     //pobieranie wielu wartosci
     @GET
     @Path("/getCurrencies/table/{table}")
-    @Produces({MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     public Response getAllCurrencies(@PathParam("table") String table) {
 
         return Response.status(Response.Status.OK)
                 .entity(new TableRepository().findByTableName(table))
-                .header("Content-Type", "application/json")
                 .build();
     }
 
