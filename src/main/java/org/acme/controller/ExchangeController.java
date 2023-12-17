@@ -1,20 +1,15 @@
 package org.acme.controller;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import com.oracle.svm.core.annotate.Delete;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-import jakarta.ws.rs.ext.MessageBodyWriter;
 import org.acme.API.NBPService;
 import org.acme.Entity.Currency;
-import org.acme.Entity.CurrencyTable;
 import org.acme.Exception.CustomNotAuthorizedException;
-import org.acme.model.CurrencyReponseXML;
 import org.acme.model.InputData;
 import org.acme.model.RequestResponse;
 import org.acme.repository.TableRepository;
@@ -51,15 +46,9 @@ public class ExchangeController {
     public Response getCurrency(@PathParam("table") String table,
                                 @PathParam("value") int value) {
 
-        Currency currency = new TableService().findByTableAndValue(table, value);
-
-
         try {
             return Response.status(Response.Status.OK)
-                    .entity(new CurrencyReponseXML(
-                                currency.getCode(),
-                                currency.getNameOfCurrency(),
-                                currency.getExchangeRate()))
+                    .entity(new TableService().findByTableAndValue(table, value))
                     .build();
         } catch (IndexOutOfBoundsException e) {
             throw new InternalServerErrorException("Wartość poza indeksem.");
