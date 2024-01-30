@@ -7,7 +7,7 @@ import jakarta.ws.rs.core.Response;
 import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 import org.jboss.logging.annotations.Pos;
 
-@RegisterRestClient(baseUri = "http://localhost:8180/")
+@RegisterRestClient(baseUri = "http://host.docker.internal:8180/")//host.docker.internal
 public interface KeyCloakService {
 
     @POST

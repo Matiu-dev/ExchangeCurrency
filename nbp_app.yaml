@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: phalcon-test
+  namespace: default
+spec:
+  containers:
+    - name: phalcon
+      image: quarkus/code-with-quarkus-jvm:latest
+      imagePullPolicy: Never
+  restartPolicy: Never
